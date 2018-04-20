@@ -1,34 +1,33 @@
-import * as _commands from './commands';
-import validator from './validate';
+import { spawnSync } from 'child_process';
+// import * as _commands from './commands';
+// import validator from './validate';
+
 
 export const name = 'GIT';
 export const description = 'GIT tools';
 
-export const commands = _commands;
+// export const commands = _commands;
+// export const validate = {
+//   git: validator,
+// };
 
-export const validate = {
-  wekan: validator,
-};
+const stripLineBreaks = str => str.replace(/(\r\n\t|\n|\r\t)/gm, '');
 
 export const prepareConfig = (config) => {
-  console.log(config);
-  return config;
-}
+  const branch = spawnSync('git', ['rev-parse', '--abbrev-ref', 'HEAD']).stdout.toString();
+  const tag = spawnSync('git', ['describe', '--tags']).stdout.toString();
+  const commit = spawnSync('git', ['rev-parse', 'HEAD']).stdout.toString();
 
-function onlyWekanEnabled(...commandList) {
-  return function run(api) {
-    if (api.getConfig().wekan) {
-      const promise = api.runCommand(commandList.shift());
-
-      commandList.forEach((command) => {
-        promise.then(() => api.runCommand(command));
-      });
-
-      return promise;
-    }
+  const env = {
+    GIT_BRANCH: stripLineBreaks(branch),
+    GIT_TAG: stripLineBreaks(tag),
+    GIT_COMMIT: stripLineBreaks(commit),
   };
-}
 
-export const hooks = {
-  // 'post.default.setup': onlyWekanEnabled('wekan.setup', 'wekan.start'),
+  if (config.app.env) {
+    Object.assign(config.app.env, env);
+  } else {
+    config.app.env = env;
+  }
+  return config;
 };

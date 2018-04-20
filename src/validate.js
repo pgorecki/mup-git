@@ -1,10 +1,11 @@
 import joi from 'joi';
 
-const schema = joi.object().keys({
-  servers: joi.object().required(),
-});
+// const schema = joi.object().keys({
+//   servers: joi.object().required(),
+// });
 
 export default function validate(config, utils) {
+  /*
   let details = [];
 
   details = utils.combineErrorDetails(
@@ -25,4 +26,5 @@ export default function validate(config, utils) {
   }
 
   return utils.addLocation(details, 'wekan');
+  */
 }

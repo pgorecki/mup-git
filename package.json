@@ -1,6 +1,11 @@
 {
   "name": "mup-git",
   "version": "0.1.0",
+  "homepage": "https://github.com/pgorecki/mup-git",
+  "repository" : {
+    "type" : "git",
+    "url" : "https://github.com/pgorecki/mup-git.git"
+  }, 
   "description": "Git tools Meteor Up plugins",
   "scripts": {
     "prepare": "npm run build",
